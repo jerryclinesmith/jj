@@ -145,6 +145,10 @@ func main() {
 	var outa bool
 	var outt gjson.Type
 	var f *os.File
+
+	prettyOpts := pretty.DefaultOptions
+	prettyOpts.Width = 2147483647
+
 	if a.infile == nil {
 		input, err = ioutil.ReadAll(os.Stdin)
 	} else {
@@ -220,13 +224,13 @@ func main() {
 		var outb2 []byte
 		gjson.ParseBytes(outb).ForEach(func(_, v gjson.Result) bool {
 			outb2 = append(outb2, pretty.Ugly([]byte(v.Raw))...)
-			outb2 = append(outb2, '\n')
+			//outb2 = append(outb2, '\n')
 			return true
 		})
 		outb = outb2
 	} else if a.raw || outt != gjson.String {
 		if a.pretty {
-			outb = pretty.Pretty(outb)
+			outb = pretty.PrettyOptions(outb, prettyOpts)
 		} else if a.ugly {
 			outb = pretty.Ugly(outb)
 		}
